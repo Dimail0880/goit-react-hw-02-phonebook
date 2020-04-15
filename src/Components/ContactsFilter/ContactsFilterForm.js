@@ -2,10 +2,10 @@ import React from 'react';
 
 const ContactsFilterForm = ({handleFilter}) => {
     return (
-        <div>
+        <form>
              <p>Find contact by name</p>
       <input type="text" onChange={handleFilter} />
-        </div>
+        </form>
     );
 };
 
