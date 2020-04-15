@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { v4 as uuidv4 } from 'uuid'; // uuidv4()
-import Phonebook from "./Components/Phonebook/Phonebook";
-import Contacts from "./Components/Contacts/Contacts";
+import Form from "./Components/Form/Form";
+import ContactsList from "./Components/ContactsList/ContactsList";
+import { v4 as uuidv4 } from "uuid"; // uuidv4()
 
 class App extends Component {
   state = {
@@ -9,21 +9,47 @@ class App extends Component {
     name: "",
   };
 
-  enterName = () => {
+  handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({ [name]: value });
+  };
 
-  }
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const newContact = {
+      id: uuidv4(),
+      name: this.state.name,
+      // number: this.state.number,
+    };
 
+    this.setState((prevState) => ({
+      contacts: [...prevState.contacts, newContact],
+      name: "",
+      // number: "",
+    }));
+  };
 
   render() {
-    const id = uuidv4()
-   console.log(id) 
-    return <div className="App">
-      <Phonebook/>
-      <Contacts/>
-    </div>;
+    // const { contacts, name } = this.state;
+    // const filteredContacts = this.getFilteredContacts(filter, contacts);
+    return (
+      <>
+        <Form
+          name={this.state.name}
+          // number={this.state.number}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+        />
+        {/* <Filter handleChangeFilter={this.getFilterValue} /> */}
+        <ContactsList
+        contactList={this.state.contacts}
+        // handleChange={this.handleDelete}
+        />
+      </>
+    );
   }
 }
-
 
 export default App;
