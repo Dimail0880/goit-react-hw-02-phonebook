@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ContactListItem = ({name}) => {
+const ContactListItem = ({name, number}) => {
     return (
         <li>
-            {name}
+            {name}: {number}
         </li>
     );
 };

@@ -2,11 +2,15 @@ import React, { Component } from "react";
 import Form from "./Components/Form/Form";
 import ContactsList from "./Components/ContactsList/ContactsList";
 import { v4 as uuidv4 } from "uuid"; // uuidv4()
+import ContactsFilterForm from './Components/ContactsFilter/ContactsFilterForm'
+
 
 class App extends Component {
   state = {
     contacts: [],
+    filter: '',
     name: "",
+    number: ""
   };
 
   handleChange = (e) => {
@@ -21,32 +25,57 @@ class App extends Component {
     const newContact = {
       id: uuidv4(),
       name: this.state.name,
-      // number: this.state.number,
+      number: this.state.number,
     };
 
+
+    if (this.state.contacts.some(
+      (el) => el.name === this.state.name))
+     { alert(`${this.state.name} is already in contacts.`);
+     
+    } else {
     this.setState((prevState) => ({
       contacts: [...prevState.contacts, newContact],
       name: "",
-      // number: "",
-    }));
+      number: "",
+    })
+    )
+  };
   };
 
+  handleFilter = (e) => {
+    this.setState({filter: e.target.value})
+  }
+
+  getFilteredContacts = (filterValue, contacts) => (
+      contacts.filter((el) => 
+       el.name.toLowerCase().includes(filterValue.toLowerCase())
+      )
+
+  );
+
+
+
   render() {
-    // const { contacts, name } = this.state;
-    // const filteredContacts = this.getFilteredContacts(filter, contacts);
+    const filteredContacts = this.getFilteredContacts(this.state.filter, this.state.contacts );
     return (
       <>
         <Form
           name={this.state.name}
-          // number={this.state.number}
+          number={this.state.number}
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
         />
-        {/* <Filter handleChangeFilter={this.getFilterValue} /> */}
-        <ContactsList
-        contactList={this.state.contacts}
-        // handleChange={this.handleDelete}
-        />
+        <ContactsList  contactList={filteredContacts} />
+       
+       
+       
+       { this.state.contacts.length >= 2 &&
+         <ContactsFilterForm handleFilter={this.handleFilter} />
+}
+          
+
+        
       </>
     );
   }
