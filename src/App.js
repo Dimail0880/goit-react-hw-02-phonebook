@@ -3,9 +3,8 @@ import Form from "./Components/Form/Form";
 import ContactsList from "./Components/ContactsList/ContactsList";
 import { v4 as uuidv4 } from "uuid"; // uuidv4()
 import ContactsFilterForm from "./Components/ContactsFilter/ContactsFilterForm";
-// import { toast } from 'react-toastify'; - не смог избавиться от errora в консоли при вызове
-import 'react-toastify/dist/ReactToastify.css';
-
+// import { toast } from 'react-toastify'; 
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends Component {
   state = {
@@ -23,14 +22,24 @@ class App extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const name = this.state.name;
+    const number = Number(this.state.number);
+
     const newContact = {
       id: uuidv4(),
       name: this.state.name,
       number: this.state.number,
     };
-
     if (this.state.contacts.some((el) => el.name === this.state.name)) {
       alert(`${this.state.name} is already in contacts.`);
+    } else if (!number && name === "") {
+      alert("Please, enter name and number, your input is empty");
+    } else if (!number) {
+      alert("Please, enter a correct number");
+    } else if (!name.length) {
+      alert("Please, enter a name");
+    } else if (Number(name)) {
+      alert("Please, enter a correct name - NOT A NUMBER");
     } else {
       this.setState((prevState) => ({
         contacts: [...prevState.contacts, newContact],
@@ -50,17 +59,11 @@ class App extends Component {
       el.name.toLowerCase().includes(filterValue.toLowerCase())
     );
 
- 
-    deleteContact = (index) => {
-      const newCollection = [...this.state.contacts];
-      newCollection.splice(index, 1);
-      this.setState({
-        contacts: newCollection,
-      });
-      // toast.warn("DELETE CONTACT COMPLETED)
-    };
-
-
+  deleteContact = (id) => {
+    this.setState((prevState) => ({
+      contacts: prevState.contacts.filter((el) => el.id !== id),
+    }));
+  };
 
   render() {
     const filteredContacts = this.getFilteredContacts(
@@ -69,7 +72,6 @@ class App extends Component {
     );
     return (
       <>
-      
         <h2>Phonebook</h2>
         <Form
           name={this.state.name}
@@ -81,8 +83,10 @@ class App extends Component {
         {this.state.contacts.length >= 2 && (
           <ContactsFilterForm handleFilter={this.handleFilter} />
         )}
-        <ContactsList contactList={filteredContacts} deleteContact={this.deleteContact} />
-        
+        <ContactsList
+          contactList={filteredContacts}
+          deleteContact={this.deleteContact}
+        />
       </>
     );
   }

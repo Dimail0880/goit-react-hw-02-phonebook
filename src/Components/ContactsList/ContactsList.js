@@ -8,7 +8,7 @@ const ContactsList = ({ contactList, deleteContact }) => {
   return (
     <ul>
       {contactList.map((el) => (
-        <ContactListItem key={uuidv4()} name={el.name} number={el.number} deleteContact={deleteContact} />
+        <ContactListItem key={uuidv4()} name={el.name} number={el.number} deleteContact={deleteContact} contact={el} />
       ))}
       <ToastContainer />
     </ul>
